@@ -31,7 +31,12 @@ RUN apt-get update -y &&\
         libx264-dev \
         libgtk-3-dev \
         libatlas-base-dev \
-        gfortran &&\
+        v4l-utils \
+        kmod \
+        canberra-gtk* \
+        uvccapture \
+        guvcview \
+        usbutils &&\
     pip3 install numpy matplotlib jupyter &&\
 #glog
     cd /opencv-tmp &&\
@@ -68,11 +73,9 @@ RUN apt-get update -y &&\
         -DCMAKE_BUILD_TYPE=RELEASE \
         -DCMAKE_INSTALL_PREFIX=/usr/local \
         -DBUILD_opencv_python2=OFF \
-#        -DBUILD_opencv_python3=ON \
         -DINSTALL_PYTHON_EXAMPLES=ON \
 #        -DINSTALL_C_EXAMPLES=OFF \
         -DOPENCV_EXTRA_MODULES_PATH=/opencv-tmp/opencv_contrib-${OPENCV_VER}/modules \
-#        -DOPENCV_PYTHON_INSTALL_PATH=/usr/local/lib/python3.7/dist-packages \
         -DPYTHON2_EXECUTABLE=$(which python2) \
         -DPYTHON3_EXECUTABLE=$(which python3) \
         -DPYTHON2_INCLUDE_DIR=$(python2 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
