@@ -2,8 +2,9 @@ FROM python:3.7-slim-buster
 LABEL maintainer "ittou <VYG07066@gmail.com>"
 ENV DEBIAN_FRONTEND noninteractive
 ARG OPENCV_VER="3.4.9"
-RUN mkdir /opencv-tmp
-RUN apt-get update -y &&\
+RUN mkdir /opencv-tmp &&\
+    echo 'deb http://ftp.jp.debian.org/debian/ buster non-free' >> /etc/apt/sources.list &&\
+    apt-get update -y &&\
     apt-get install -yq \
         build-essential \
         cmake \
@@ -15,7 +16,9 @@ RUN apt-get update -y &&\
         yasm \
         dh-autoreconf \
         pkg-config \
+        python3-dev \
         python3-pip \
+        libdc1394-22-dev \
         libswscale-dev \
         libtbb2 \
         libtbb-dev \
@@ -31,8 +34,34 @@ RUN apt-get update -y &&\
         libx264-dev \
         libgtk-3-dev \
         libatlas-base-dev \
+        libopencv-dev \
+#        libjasper-dev \
+        libxine2-dev \
+        libgstreamer1.0-0 \
+        libgstreamer1.0-dev \
+        libgstreamer-plugins-base1.0-0 \
+        libgstreamer-plugins-base1.0-dev \
+# need
+        libgstreamer-plugins-bad1.0-0 \
+        qtbase5-dev \
+        libfaac-dev \
+        libmp3lame-dev \
+        libtheora-dev \
+        libvorbis-dev \
+        libxvidcore-dev \
+        gstreamer1.0-alsa \
+        gstreamer1.0-gtk3 \
+# need
+        gstreamer1.0-libav \ 
+        gstreamer1.0-plugins-ugly \
+        gstreamer1.0-pulseaudio \
+# need
+        gstreamer1.0-plugins-bad-videoparsers \
+        x264 \
+        ffmpeg \
         v4l-utils \
         kmod \
+        gfortran \
         canberra-gtk* \
         uvccapture \
         guvcview \
@@ -60,21 +89,26 @@ RUN apt-get update -y &&\
     cd /opencv-tmp/opencv-${OPENCV_VER}/build &&\
     cmake \
         -DBUILD_TIFF=ON \
+        -DBUILD_JASPER=OFF \
         -DBUILD_opencv_java=OFF \
-        -DWITH_CUDA=OFF \
+        -DWITH_CUDA=ON \
+        -DWITH_JASPER=OFF \
         -DWITH_OPENGL=ON \
         -DWITH_OPENCL=ON \
         -DWITH_IPP=ON \
         -DWITH_TBB=ON \
+        -DTBB_INCLUDE_DIR=/usr/include/tbb \
         -DWITH_EIGEN=ON \
         -DWITH_V4L=ON \
+        -DWITH_QT=ON \
+        -DWITH_GTK=ON \
+        -DWITH_GTK_2_X=OFF \
         -DBUILD_TESTS=OFF \
         -DBUILD_PERFF_TESTS=OFF \
         -DCMAKE_BUILD_TYPE=RELEASE \
         -DCMAKE_INSTALL_PREFIX=/usr/local \
         -DBUILD_opencv_python2=OFF \
         -DINSTALL_PYTHON_EXAMPLES=ON \
-#        -DINSTALL_C_EXAMPLES=OFF \
         -DOPENCV_EXTRA_MODULES_PATH=/opencv-tmp/opencv_contrib-${OPENCV_VER}/modules \
         -DPYTHON2_EXECUTABLE=$(which python2) \
         -DPYTHON3_EXECUTABLE=$(which python3) \
@@ -83,7 +117,7 @@ RUN apt-get update -y &&\
         -DPYTHON2_PACKAGES_PATH=$(python2 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
         -DPYTHON3_PACKAGES_PATH=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
         -DBUILD_EXAMPLES=ON .. &&\
-    make -j8 &&\
+    make -j $(nproc) &&\
     make install &&\
     sudo rm -rf /opencv-tmp && \
     ldconfig &&\
