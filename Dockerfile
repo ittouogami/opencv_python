@@ -16,12 +16,12 @@ RUN mkdir /opencv-tmp &&\
         yasm \
         dh-autoreconf \
         pkg-config \
+        dbus-x11 \
         python3-dev \
         python3-pip \
         libdc1394-22-dev \
         libswscale-dev \
         libtbb2 \
-        libtbb-dev \
         libjpeg-dev \
         libpng-dev \
         libtiff-dev \
@@ -38,7 +38,6 @@ RUN mkdir /opencv-tmp &&\
 #        libjasper-dev \
         libxine2-dev \
         libgstreamer1.0-0 \
-        libgstreamer1.0-dev \
         libgstreamer-plugins-base1.0-0 \
         libgstreamer-plugins-base1.0-dev \
 # need
@@ -50,13 +49,9 @@ RUN mkdir /opencv-tmp &&\
         libvorbis-dev \
         libxvidcore-dev \
         gstreamer1.0-alsa \
-        gstreamer1.0-gtk3 \
 # need
         gstreamer1.0-libav \ 
         gstreamer1.0-plugins-ugly \
-        gstreamer1.0-pulseaudio \
-# need
-        gstreamer1.0-plugins-bad-videoparsers \
         x264 \
         ffmpeg \
         v4l-utils \
