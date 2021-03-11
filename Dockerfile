@@ -60,20 +60,11 @@ RUN mkdir /opencv-tmp &&\
         canberra-gtk* \
         uvccapture \
         guvcview \
+        libgoogle-glog-dev \
+        libgflags-dev \
         usbutils &&\
+    pip3 install --upgrade pip &&\
     pip3 install numpy matplotlib jupyter &&\
-#glog
-    cd /opencv-tmp &&\
-    git clone https://github.com/google/glog.git &&\
-    cd /opencv-tmp/glog &&\
-    ./autogen.sh && ./configure && make && make install &&\
-#gflags
-    cd /opencv-tmp &&\
-    git clone https://github.com/gflags/gflags.git &&\
-    mkdir /opencv-tmp/gflags/build &&\
-    cd /opencv-tmp/gflags/build &&\
-    cmake ../ &&\
-    make && make install &&\
 #opencv
     cd /opencv-tmp &&\
     wget -O opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VER}.zip &&\
